@@ -21,7 +21,7 @@ yum -y install python3-devel chrony
 ```bash
 yum -y install python python-devel ntpdate 
 ```
-- 别问我为啥，我太菜没看懂原作者写的系统判断逻辑，即使我修改成了Centos8标志，但在安装python这一步时会判断成centos7，索性全部注释掉这个逻辑手动安装，能用就行
+- 别问我为啥，我太菜没看懂原作者写的系统判断逻辑，即使我修改成了Centos8标志，但在安装python这一步时脚本会将系统判断成centos7，而centos8没有python这个包名所以会抛出错误中止脚本，索性全部注释掉这个逻辑手动安装，能用就行
 
 
 ## Description
