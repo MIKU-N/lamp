@@ -17,11 +17,11 @@ CentOS Linux release 8 (Core)
 ```bash
 yum -y install python3-devel chrony
 ```
-注意，如果是centos7以下版本，请一样手动yum安装python开发包
+- 注意，如果是centos7以下版本，请一样手动yum安装python开发包
 ```bash
 yum -y install python python-devel ntpdate 
 ```
-别问我为啥，我太菜没看懂原作者写的系统判断逻辑，即使我修改成了Centos8标志，但在安装python这一步时会判断成centos7，索性全部注释掉这个逻辑手动安装
+- 别问我为啥，我太菜没看懂原作者写的系统判断逻辑，即使我修改成了Centos8标志，但在安装python这一步时会判断成centos7，索性全部注释掉这个逻辑手动安装，能用就行
 
 
 ## Description
