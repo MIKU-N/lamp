@@ -4,7 +4,25 @@
     </a>
 </div>
 
-##尝试修改以适配Alibaba Cloud Linux 3
+## 尝试修改以适配Alibaba Cloud Linux 3
+根据阿里的官方文档的说明猜测 Alibaba Cloud Linux 3 其实就是centos8魔改过来的，毕竟完全支持centos8生态。
+所以，请修改/etc/redhat-release来将其伪装成centos
+```bash
+vi /etc/redhat-release
+CentOS Linux release 8 (Core)
+```
+然后手动编译安装[cmake](https://cmake.org/download/)的最新版本
+不要用yum方式安装，因为我测试后发现无法编译MySql的Lib扩展
+然后yum安装python3 dev包
+```bash
+yum -y install python3-devel chrony
+```
+注意，如果是centos7以下版本，请一样手动yum安装python开发包
+```bash
+yum -y install python python-devel ntpdate 
+```
+别问我为啥，我太菜没看懂原作者写的系统判断逻辑，即使我修改成了Centos8标志，但在安装python这一步时会判断成centos7，索性全部注释掉这个逻辑手动安装
+
 
 ## Description
 
@@ -25,6 +43,7 @@
 
 ## Supported System
 
+- Alibaba Cloud Linux 3
 - Amazon Linux 2018.03
 - Amazon Linux 2
 - CentOS-6.x
