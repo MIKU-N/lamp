@@ -299,6 +299,7 @@ check_os(){
         # Not support CentOS prior to 6 & Debian prior to 8 & Ubuntu prior to 14 versions
         if [ -n "$(get_centosversion)" ] && [ $(get_centosversion) -lt 6 ]; then
             is_support_flg=1
+        fi
         if [ -n "$(get_aclversion)" ] && [ $(get_aclversion) -lt 2 ]; then
             is_support_flg=1
             else
