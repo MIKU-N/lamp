@@ -299,6 +299,10 @@ check_os(){
         # Not support CentOS prior to 6 & Debian prior to 8 & Ubuntu prior to 14 versions
         if [ -n "$(get_centosversion)" ] && [ $(get_centosversion) -lt 6 ]; then
             is_support_flg=1
+        if [ -n "$(get_aclversion)" ] && [ $(get_aclversion) -lt 2 ]; then
+            is_support_flg=1
+            else
+            is_support_flg=0
         fi
         if [ -n "$(get_debianversion)" ] && [ $(get_debianversion) -lt 8 ]; then
             is_support_flg=1
@@ -310,7 +314,7 @@ check_os(){
         is_support_flg=1
     fi
     if [ ${is_support_flg} -eq 1 ]; then
-        _error "Not supported OS, please change OS to CentOS 6+ or Debian 8+ or Ubuntu 14+ and try again."
+        _error "Not supported OS, please change OS to CentOS 6+ or Debian 8+ or Ubuntu 14+ or Alibaba Cloud Linux 3 and try again."
     fi
 }
 
@@ -531,6 +535,31 @@ versionget(){
         grep -oE  "[0-9.]+" /etc/issue
     fi
 }
+
+aclversion(){
+    if check_sys sysRelease Alibaba Cloud Linux; then
+        local code=${1}
+        local version="$(versionget)"
+        local main_ver=${version%%.*}
+        if [ "$main_ver" == "$code" ]; then
+            return 0
+        else
+            return 1
+        fi
+    else
+        return 1
+    fi
+}
+
+get_aclversion(){
+    if check_sys sysRelease centos; then
+        local version="$(versionget)"
+        echo ${version%%.*}
+    else
+        echo ""
+    fi
+}
+
 
 centosversion(){
     if check_sys sysRelease centos; then
@@ -995,7 +1024,7 @@ install_tools(){
         for tool in ${yum_tools[@]}; do
             error_detect_depends "yum -y install ${tool}"
         done
-        if centosversion 6 || centosversion 7 || centosversion 8; then
+        if centosversion 6 || centosversion 7 || centosversion 8 || aclversion 3; then
             error_detect_depends "yum -y install epel-release"
             yum-config-manager --enable epel > /dev/null 2>&1
         fi
@@ -1003,7 +1032,7 @@ install_tools(){
         if is_exist "amazon-linux-extras"; then
             amazon-linux-extras install -y epel > /dev/null 2>&1
         fi
-        if centosversion 8; then
+        if centosversion 8 || aclversion 3; then
             error_detect_depends "yum -y install python3-devel"
             error_detect_depends "yum -y install chrony"
             yum-config-manager --enable PowerTools > /dev/null 2>&1 || yum-config-manager --enable powertools > /dev/null 2>&1
