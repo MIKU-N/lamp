@@ -552,7 +552,7 @@ aclversion(){
 }
 
 get_aclversion(){
-    if check_sys sysRelease centos; then
+    if check_sys sysRelease Alibaba Cloud Linux; then
         local version="$(versionget)"
         echo ${version%%.*}
     else
