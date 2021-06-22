@@ -71,7 +71,7 @@ get_libc_version(){
 }
 
 get_opsy(){
-    [ -f /etc/redhat-release ] && awk '{print ($1,$3~/^[0-9]/?$3:$4)}' /etc/redhat-release && return
+    [ -f /etc/redhat-release ] && cat /etc/redhat-release && return
     [ -f /etc/os-release ] && awk -F'[= "]' '/PRETTY_NAME/{print $3,$4,$5}' /etc/os-release && return
     [ -f /etc/lsb-release ] && awk -F'[="]+' '/DESCRIPTION/{print $2}' /etc/lsb-release && return
 }
@@ -333,10 +333,7 @@ check_sys(){
     local value="$2"
     local release=''
     local systemPackage=''
-    if [[ -f /etc/redhat-release ]]; then
-        release="centos"
-        systemPackage="yum"
-    elif grep -Eqi "debian" /etc/issue; then
+    if grep -Eqi "debian" /etc/issue; then
         release="debian"
         systemPackage="apt"
     elif grep -Eqi "ubuntu" /etc/issue; then
@@ -353,6 +350,9 @@ check_sys(){
         systemPackage="apt"
     elif grep -Eqi "centos|red hat|redhat" /proc/version; then
         release="centos"
+        systemPackage="yum"
+    elif grep -Eqi "alibaba" /etc/redhat-release ;then
+        release="ACL"
         systemPackage="yum"
     fi
 
@@ -538,7 +538,7 @@ versionget(){
 }
 
 aclversion(){
-    if check_sys sysRelease Alibaba Cloud Linux; then
+    if check_sys sysRelease ACL; then
         local code=${1}
         local version="$(versionget)"
         local main_ver=${version%%.*}
@@ -553,7 +553,7 @@ aclversion(){
 }
 
 get_aclversion(){
-    if check_sys sysRelease Alibaba Cloud Linux; then
+    if check_sys sysRelease ACL; then
         local version="$(versionget)"
         echo ${version%%.*}
     else
