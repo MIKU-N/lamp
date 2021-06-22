@@ -1037,11 +1037,10 @@ install_tools(){
             error_detect_depends "yum -y install python3-devel"
             error_detect_depends "yum -y install chrony"
             yum-config-manager --enable PowerTools > /dev/null 2>&1 || yum-config-manager --enable powertools > /dev/null 2>&1
-    #Disable Centos 7- python install.
-    #   else
-    #       error_detect_depends "yum -y install python"
-    #       error_detect_depends "yum -y install python-devel"
-    #       error_detect_depends "yum -y install ntpdate"
+       else
+           error_detect_depends "yum -y install python"
+           error_detect_depends "yum -y install python-devel"
+          error_detect_depends "yum -y install ntpdate"
        fi
     fi
     _info "Install development tools completed..."
