@@ -7,7 +7,7 @@
 ## 尝试修改以适配Alibaba Cloud Linux 3
 - 根据阿里的官方文档的说明猜测 Alibaba Cloud Linux 3 其实就是centos8魔改过来的，毕竟完全支持centos8生态。
 - 所以我改了一下原作者的系统识别逻辑，现在对于Alibaba Cloud Linux 3完全适配。
-- 目前唯一的问题是yum方式安装的cmake无法编译MySql的Libzip扩展，但是手动编译安装[cmake](https://cmake.org/download/)的最新版本却可以，只能推测出是yum获得到的cmake版本问题。   
+- 目前唯一的问题是yum方式安装的cmake无法编译PHP的Libzip扩展，但是手动编译安装[cmake](https://cmake.org/download/)的最新版本却可以，只能推测出是yum获得到的cmake版本问题。 所以此版本移除了yum安装cmake的操作，请手动编译安装。  
 
 
 ## Description
