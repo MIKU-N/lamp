@@ -58,27 +58,27 @@
 | httpd                         | 2.4.48                                                    |
 | apr                           | 1.7.0                                                     |
 | apr-util                      | 1.6.1                                                     |
-| nghttp2                       | 1.43.0                                                    |
+| nghttp2                       | 1.44.0                                                    |
 | openssl                       | 1.1.1k                                                    |
-| mod_wsgi                      | 4.8.0                                                     |
+| mod_wsgi                      | 4.9.0                                                     |
 | mod_security2                 | 2.9.4                                                     |
 | mod_jk                        | 1.2.48                                                    |
 
 | Database                      | Version                                                   |
 |-------------------------------|-----------------------------------------------------------|
-| MySQL                         | 5.6.51, 5.7.34, 8.0.25                                    |
-| MariaDB                       | 10.1.48, 10.2.38, 10.3.29, 10.4.19, 10.5.10               |
+| MySQL                         | 5.6.51, 5.7.35, 8.0.26                                    |
+| MariaDB                       | 10.1.48, 10.2.40, 10.3.31, 10.4.21, 10.5.12               |
 
 | PHP & Additional extensions   | Version                                                   |
 |-------------------------------|-----------------------------------------------------------|
-| PHP                           | 5.6.40, 7.0.33, 7.1.33, 7.2.34, 7.3.28, 7.4.20, 8.0.7     |
+| PHP                           | 5.6.40, 7.0.33, 7.1.33, 7.2.34, 7.3.29, 7.4.22, 8.0.9     |
 | ionCube Loader                | 10.4.5                                                    |
 | PDFlib (PHP 7.3+)             | 9.3.1                                                     |
 | XCache (PHP 5.6)              | 3.2.0                                                     |
 | APCu extension                | 5.1.20                                                    |
 | gRPC extension                | 1.38.0                                                    |
-| ImageMagick                   | 7.0.11-13                                                 |
-| imagick extension             | 3.4.4                                                     |
+| ImageMagick                   | 7.1.0-4                                                   |
+| imagick extension             | 3.5.0                                                     |
 | GraphicsMagick                | 1.3.36                                                    |
 | gmagick extension (PHP 5.6)   | 1.1.7RC3                                                  |
 | gmagick extension (PHP 7.0+)  | 2.0.6RC1                                                  |
@@ -88,15 +88,16 @@
 | libmemcached                  | 1.0.18                                                    |
 | memcached extension (PHP 5.6) | 2.2.0                                                     |
 | memcached extension (PHP 7.0+)| 3.1.5                                                     |
-| redis                         | 5.0.12                                                    |
+| re2c                          | 2.2                                                       |
+| redis                         | 5.0.13                                                    |
 | redis extension (PHP 5.6)     | 4.3.0                                                     |
 | redis extension (PHP 7.0+)    | 5.3.4                                                     |
-| mongodb extension             | 1.9.1                                                     |
-| swoole extension (PHP 7.2+)   | 4.6.7                                                     |
-| yaf extension (PHP 7.0+)      | 3.3.2                                                     |
+| mongodb extension             | 1.9.2                                                     |
+| swoole extension (PHP 7.2+)   | 4.7.0                                                     |
+| yaf extension (PHP 7.0+)      | 3.3.3                                                     |
 | yar extension (PHP 7.0+)      | 2.2.0                                                     |
 | msgpack extension (PHP 7.0+)  | 2.1.2                                                     |
-| psr extension (PHP 7.2+)      | 1.0.1                                                     |
+| psr extension (PHP 7.2+)      | 1.1.0                                                     |
 | phalcon extension (PHP 7.3+)  | 4.1.2                                                     |
 | xdebug extension (PHP 5.6)    | 2.5.5                                                     |
 | xdebug extension (PHP 7.0+)   | 2.9.8                                                     |
@@ -110,7 +111,7 @@
 
 | File Managerment Tool         | Version                                                   |
 |-------------------------------|-----------------------------------------------------------|
-| KodExplorer                   | 4.35                                                      |
+| KodExplorer                   | 4.46                                                      |
 
 ## Installation
 
