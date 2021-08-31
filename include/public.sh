@@ -1015,7 +1015,7 @@ install_tools(){
     _info "Installing development tools..."
     if check_sys packageManager apt; then
         apt-get -y update > /dev/null 2>&1
-        apt_tools=(tar gcc g++ make wget perl curl bzip2 libreadline-dev net-tools python python-dev cron ca-certificates ntpdate)
+        apt_tools=(tar gcc g++ cmake make wget perl curl bzip2 libreadline-dev net-tools python python-dev cron ca-certificates ntpdate)
         for tool in ${apt_tools[@]}; do
             error_detect_depends "apt-get -y install ${tool}"
         done
@@ -1026,6 +1026,13 @@ install_tools(){
             error_detect_depends "yum -y install ${tool}"
         done
         if centosversion 6 || centosversion 7 || centosversion 8 || aclversion 3; then
+        # Add install cmake
+            error_detect_depends "yum -y install cmake"
+        #   error_detect_depends "wget https://github.com/Kitware/CMake/releases/download/v3.21.1/cmake-3.21.1-linux-x86_64.tar.gz"
+        #   error_detect_depends "tar -xzvf cmake-3.21.1-linux-x86_64.tar.gz"
+        #   error_detect_depends "mv cmake-3.21.1-linux-x86_64 cmake"
+        #   error_detect_depends "mv /root/cmake /usr/local/"
+        # Add eple-release 
             error_detect_depends "yum -y install epel-release"
             yum-config-manager --enable epel > /dev/null 2>&1
         fi
@@ -1033,6 +1040,7 @@ install_tools(){
         if is_exist "amazon-linux-extras"; then
             amazon-linux-extras install -y epel > /dev/null 2>&1
         fi
+        # Add Alibaba Cloud Linux 3
         if centosversion 8 || aclversion 3; then
             error_detect_depends "yum -y install python3-devel"
             error_detect_depends "yum -y install chrony"
