@@ -9,10 +9,11 @@
 # Just need to input numbers to choose what you want to install before installation.
 # And all things will be done in a few minutes.
 #
-# System Required:  CentOS 6+ / Debian 8+ / Ubuntu 14+
+# System Required:  CentOS 6+ / Debian 8+ / Ubuntu 14+ / Alibaba Cloud Linux 3
 # Description:  Install LAMP(Linux + Apache + MySQL/MariaDB + PHP )
-# Website:  https://lamp.sh
-# Github:   https://github.com/teddysun/lamp
+# Origin Website:  https://lamp.sh
+# Origin Github:   https://github.com/teddysun/lamp
+# Edit by Rain for Alibaba Cloud Linux 3:    https://github.com/MIKU-N/lamp/
 
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
@@ -28,7 +29,7 @@ include(){
         exit 1
     fi
 }
-
+#I don't Edit Version Because it will Fetch to Origin Program
 version(){
     _info "Version: $(_green 20210715)"
 }
@@ -49,7 +50,9 @@ show_help(){
     echo "+-------------------------------------------------------------------+"
     echo "| Auto Install LAMP(Linux + Apache + MySQL/MariaDB + PHP )          |"
     echo "| Website: https://lamp.sh                                          |"
-    echo "| Author : Teddysun <i@teddysun.com>                                |"
+    echo "| Orgin Author : Teddysun <i@teddysun.com>                          |"
+    echo "| Edit Author : Rain <https://github.com/MIKU-N/lamp/>              |"
+    echo "| This Version is Edit for Ailibaba Cloud Linux 3                   |"
     echo "+-------------------------------------------------------------------+"
     echo
     printf "
