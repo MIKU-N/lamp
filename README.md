@@ -7,6 +7,7 @@
 ## 尝试修改以适配Alibaba Cloud Linux 3
 - 根据阿里的官方文档的说明猜测 Alibaba Cloud Linux 3 其实就是centos8魔改过来的，毕竟完全支持centos8生态。
 - 所以我改了一下原作者的系统识别逻辑，现在对于Alibaba Cloud Linux 3完全适配。
+- 已在Alibaba cloud Linux 3镜像内实验通过，完全可以正常无人值守化编译安装。
 
 
 
