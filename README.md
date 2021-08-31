@@ -60,7 +60,7 @@
 | apr                           | 1.7.0                                                     |
 | apr-util                      | 1.6.1                                                     |
 | nghttp2                       | 1.44.0                                                    |
-| openssl                       | 1.1.1k                                                    |
+| openssl                       | 1.1.1l                                                    |
 | mod_wsgi                      | 4.9.0                                                     |
 | mod_security2                 | 2.9.4                                                     |
 | mod_jk                        | 1.2.48                                                    |
@@ -72,14 +72,14 @@
 
 | PHP & Additional extensions   | Version                                                   |
 |-------------------------------|-----------------------------------------------------------|
-| PHP                           | 5.6.40, 7.0.33, 7.1.33, 7.2.34, 7.3.29, 7.4.22, 8.0.9     |
+| PHP                           | 5.6.40, 7.0.33, 7.1.33, 7.2.34, 7.3.30, 7.4.23, 8.0.10    |
 | ionCube Loader                | 10.4.5                                                    |
 | PDFlib (PHP 7.3+)             | 9.3.1                                                     |
 | XCache (PHP 5.6)              | 3.2.0                                                     |
 | APCu extension                | 5.1.20                                                    |
-| gRPC extension                | 1.38.0                                                    |
+| gRPC extension                | 1.39.0                                                    |
 | ImageMagick                   | 7.1.0-4                                                   |
-| imagick extension             | 3.5.0                                                     |
+| imagick extension             | 3.5.1                                                     |
 | GraphicsMagick                | 1.3.36                                                    |
 | gmagick extension (PHP 5.6)   | 1.1.7RC3                                                  |
 | gmagick extension (PHP 7.0+)  | 2.0.6RC1                                                  |
@@ -94,7 +94,7 @@
 | redis extension (PHP 5.6)     | 4.3.0                                                     |
 | redis extension (PHP 7.0+)    | 5.3.4                                                     |
 | mongodb extension             | 1.9.2                                                     |
-| swoole extension (PHP 7.2+)   | 4.7.0                                                     |
+| swoole extension (PHP 7.2+)   | 4.7.1                                                     |
 | yaf extension (PHP 7.0+)      | 3.3.3                                                     |
 | yar extension (PHP 7.0+)      | 2.2.0                                                     |
 | msgpack extension (PHP 7.0+)  | 2.1.2                                                     |

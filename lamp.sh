@@ -31,7 +31,7 @@ include(){
 }
 #I don't Edit Version Because it will Fetch to Origin Program
 version(){
-    _info "Version: $(_green 20210715)"
+    _info "Version: $(_green 20210815)"
 }
 
 show_parameters(){

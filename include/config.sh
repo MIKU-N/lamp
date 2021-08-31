@@ -37,8 +37,8 @@ parallel_compile=1
 nghttp2_filename="nghttp2-1.44.0"
 nghttp2_filename_url="https://github.com/nghttp2/nghttp2/releases/download/v1.44.0/nghttp2-1.44.0.tar.gz"
 #openssl
-openssl_filename="openssl-1.1.1k"
-openssl_filename_url="https://www.openssl.org/source/openssl-1.1.1k.tar.gz"
+openssl_filename="openssl-1.1.1l"
+openssl_filename_url="https://www.openssl.org/source/openssl-1.1.1l.tar.gz"
 #apache2.4
 apache2_4_filename="httpd-2.4.48"
 apache2_4_filename_url="http://ftp.jaist.ac.jp/pub/apache//httpd/httpd-2.4.48.tar.gz"
@@ -71,14 +71,14 @@ php7_1_filename_url="https://www.php.net/distributions/php-7.1.33.tar.gz"
 php7_2_filename="php-7.2.34"
 php7_2_filename_url="https://www.php.net/distributions/php-7.2.34.tar.gz"
 #php7.3
-php7_3_filename="php-7.3.29"
-php7_3_filename_url="https://www.php.net/distributions/php-7.3.29.tar.gz"
+php7_3_filename="php-7.3.30"
+php7_3_filename_url="https://www.php.net/distributions/php-7.3.30.tar.gz"
 #php7.4
-php7_4_filename="php-7.4.22"
-php7_4_filename_url="https://www.php.net/distributions/php-7.4.22.tar.gz"
+php7_4_filename="php-7.4.23"
+php7_4_filename_url="https://www.php.net/distributions/php-7.4.23.tar.gz"
 #php8.0
-php8_0_filename="php-8.0.9"
-php8_0_filename_url="https://www.php.net/distributions/php-8.0.9.tar.gz"
+php8_0_filename="php-8.0.10"
+php8_0_filename_url="https://www.php.net/distributions/php-8.0.10.tar.gz"
 #phpMyAdmin
 phpmyadmin_filename="phpMyAdmin-4.9.7-all-languages"
 phpmyadmin_filename_url="https://files.phpmyadmin.net/phpMyAdmin/4.9.7/phpMyAdmin-4.9.7-all-languages.tar.gz"
@@ -170,8 +170,8 @@ pdflib64_filename="PDFlib-9.3.1-Linux-x64-php"
 pdflib64_filename_url="https://www.pdflib.com/binaries/PDFlib/931/PDFlib-9.3.1-Linux-x64-php.tar.gz"
 #PECL packages
 #php extension swoole
-swoole_filename="swoole-4.7.0"
-swoole_filename_url="https://pecl.php.net/get/swoole-4.7.0.tgz"
+swoole_filename="swoole-4.7.1"
+swoole_filename_url="https://pecl.php.net/get/swoole-4.7.1.tgz"
 #php extension xdebug
 xdebug_filename="xdebug-2.5.5"
 xdebug_filename_url="https://pecl.php.net/get/xdebug-2.5.5.tgz"
@@ -183,8 +183,8 @@ xdebug_filename3_url="https://pecl.php.net/get/xdebug-3.0.4.tgz"
 ImageMagick_filename="ImageMagick-7.1.0-4"
 ImageMagick_filename_url="https://download.imagemagick.org/ImageMagick/download/releases/ImageMagick-7.1.0-4.tar.gz"
 #php extension imagick
-php_imagemagick_filename="imagick-3.5.0"
-php_imagemagick_filename_url="https://pecl.php.net/get/imagick-3.5.0.tgz"
+php_imagemagick_filename="imagick-3.5.1"
+php_imagemagick_filename_url="https://pecl.php.net/get/imagick-3.5.1.tgz"
 #GraphicsMagick
 GraphicsMagick_filename="GraphicsMagick-1.3.36"
 GraphicsMagick_filename_url="https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/1.3.36/GraphicsMagick-1.3.36.tar.gz/download"
@@ -234,8 +234,8 @@ phalcon_filename_url="https://pecl.php.net/get/phalcon-4.1.2.tgz"
 apcu_filename="apcu-5.1.20"
 apcu_filename_url="https://pecl.php.net/get/apcu-5.1.20.tgz"
 #php extension grpc
-grpc_filename="grpc-1.38.0"
-grpc_filename_url="https://pecl.php.net/get/grpc-1.38.0.tgz"
+grpc_filename="grpc-1.39.0"
+grpc_filename_url="https://pecl.php.net/get/grpc-1.39.0.tgz"
 #php extension msgpack
 msgpack_filename="msgpack-2.1.2"
 msgpack_filename_url="https://pecl.php.net/get/msgpack-2.1.2.tgz"
