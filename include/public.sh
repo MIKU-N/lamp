@@ -1033,6 +1033,10 @@ install_tools(){
         if is_exist "amazon-linux-extras"; then
             amazon-linux-extras install -y epel > /dev/null 2>&1
         fi
+        #Add EPEL Base URL when system is ACL3
+        if aclversion 3; then
+        sed -i '4a baseurl=http://mirrors.cloud.aliyuncs.com/epel/8/Everything/$basearch' /etc/yum.repos.d/epel-modular.repo
+        fi
         # Add Alibaba Cloud Linux 3
         if centosversion 8 || aclversion 3; then
             error_detect_depends "yum -y install python3-devel"
