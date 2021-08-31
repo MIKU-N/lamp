@@ -1021,18 +1021,11 @@ install_tools(){
         done
     elif check_sys packageManager yum; then
         yum makecache > /dev/null 2>&1
-        yum_tools=(yum-utils tar gcc gcc-c++ make wget perl curl bzip2 readline readline-devel net-tools crontabs ca-certificates)
+        yum_tools=(yum-utils tar gcc gcc-c++ make cmake wget perl curl bzip2 readline readline-devel net-tools crontabs ca-certificates)
         for tool in ${yum_tools[@]}; do
             error_detect_depends "yum -y install ${tool}"
         done
         if centosversion 6 || centosversion 7 || centosversion 8 || aclversion 3; then
-        # Add install cmake
-            error_detect_depends "yum -y install cmake"
-        #   error_detect_depends "wget https://github.com/Kitware/CMake/releases/download/v3.21.1/cmake-3.21.1-linux-x86_64.tar.gz"
-        #   error_detect_depends "tar -xzvf cmake-3.21.1-linux-x86_64.tar.gz"
-        #   error_detect_depends "mv cmake-3.21.1-linux-x86_64 cmake"
-        #   error_detect_depends "mv /root/cmake /usr/local/"
-        # Add eple-release 
             error_detect_depends "yum -y install epel-release"
             yum-config-manager --enable epel > /dev/null 2>&1
         fi
