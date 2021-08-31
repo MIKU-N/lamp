@@ -261,7 +261,9 @@ display_os_info(){
     echo "+-------------------------------------------------------------------+"
     echo "| Auto Install LAMP(Linux + Apache + MySQL/MariaDB + PHP )          |"
     echo "| Website: https://lamp.sh                                          |"
-    echo "| Author : Teddysun <i@teddysun.com>                                |"
+    echo "| Orgin Author : Teddysun <i@teddysun.com>                          |"
+    echo "| Edit Author : Rain <https://github.com/MIKU-N/lamp/>              |"
+    echo "| This Version is Edit by Rian for Ailibaba Cloud Linux 3           |"
     echo "+-------------------------------------------------------------------+"
     echo
     echo "--------------------- System Information ----------------------------"
