@@ -8,6 +8,9 @@
 - 根据阿里的官方文档的说明猜测 Alibaba Cloud Linux 3 其实就是centos8魔改过来的，毕竟完全支持centos8生态。
 - 所以我改了一下原作者的系统识别逻辑，现在对于Alibaba Cloud Linux 3完全适配。
 - 已在Alibaba cloud Linux 3镜像内实验通过，完全可以正常无人值守化编译安装。
+## 其他定制化系统支持
+- TencentOS Server 3 √
+我在TencentOS Server 3上测试时发现他们压根没有修改redhat-release信息，脚本识别到的就是Centos8.2，所以无需对脚本进行修改默认就能兼容。
 
 
 
@@ -30,6 +33,7 @@
 
 ## Supported System
 
+- TencentOS Server 3
 - Alibaba Cloud Linux 3
 - Amazon Linux 2018.03
 - Amazon Linux 2
