@@ -125,7 +125,7 @@ install_php_depends(){
     #Remove cmake install
     elif check_sys packageManager yum; then
         yum_depends=(
-            autoconf patch m4 bison bzip2-devel pam-devel gmp-devel libicu-devel
+            cmake autoconf patch m4 bison bzip2-devel pam-devel gmp-devel libicu-devel
             curl-devel pcre-devel libtool-libs libtool-ltdl-devel libwebp-devel libXpm-devel
             libvpx-devel libjpeg-devel libpng-devel freetype-devel oniguruma-devel
             aspell-devel enchant-devel readline-devel libtidy-devel sqlite-devel
