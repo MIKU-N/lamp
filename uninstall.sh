@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Copyright (C) 2013 - 2021 Teddysun <i@teddysun.com>
+# Copyright (C) 2013 - 2022 Teddysun <i@teddysun.com>
 # 
 # This file is part of the LAMP script.
 #
@@ -9,7 +9,7 @@
 # Just need to input numbers to choose what you want to install before installation.
 # And all things will be done in a few minutes.
 #
-# System Required:  CentOS 6+ / Fedora28+ / Debian 8+ / Ubuntu 14+
+# System Required:  CentOS 7+ / Debian 9+ / Ubuntu 18+
 # Description:  Uninstall LAMP(Linux + Apache + MySQL/MariaDB + PHP )
 # Website:  https://lamp.sh
 # Github:   https://github.com/teddysun/lamp
@@ -72,6 +72,7 @@ uninstall_lamp(){
     rm -rf /usr/local/bin/iconv
     rm -rf /usr/local/bin/re2c
     rm -rf /usr/local/bin/re2go
+    rm -rf /usr/local/bin/re2rust
     rm -rf /usr/local/bin/mcrypt
     rm -rf /usr/local/bin/mdecrypt
     rm -rf /etc/ld.so.conf.d/locallib.conf

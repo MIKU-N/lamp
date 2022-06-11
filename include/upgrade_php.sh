@@ -1,4 +1,4 @@
-# Copyright (C) 2013 - 2021 Teddysun <i@teddysun.com>
+# Copyright (C) 2013 - 2022 Teddysun <i@teddysun.com>
 # 
 # This file is part of the LAMP script.
 #
@@ -27,6 +27,9 @@ upgrade_php(){
     local php_version=$(get_php_version "${phpConfig}")
     local php_extension_dir=$(get_php_extension_dir "${phpConfig}")
     local installed_php=$(${php_location}/bin/php -r 'echo PHP_VERSION;' 2>/dev/null)
+    local configure_options=$(${phpConfig} --configure-options)
+    local openssl_version=$(openssl version -v)
+    local major_version=$(echo ${openssl_version} | awk '{print $2}' | grep -oE "[0-9.]+")
 
     case "${php_version}" in
         5.6)
@@ -42,13 +45,16 @@ upgrade_php(){
             latest_php="7.2.34"
             ;;
         7.3)
-            latest_php="$(curl -4s https://www.php.net/downloads.php | awk '/Changelog/{print $2}' | grep '7.3')"
+            latest_php="7.3.33"
             ;;
         7.4)
             latest_php="$(curl -4s https://www.php.net/downloads.php | awk '/Changelog/{print $2}' | grep '7.4')"
             ;;
         8.0)
             latest_php="$(curl -4s https://www.php.net/downloads.php | awk '/Changelog/{print $2}' | grep '8.0')"
+            ;;
+        8.1)
+            latest_php="$(curl -4s https://www.php.net/downloads.php | awk '/Changelog/{print $2}' | grep '8.1')"
             ;;
         *)
         # do nothing
@@ -69,100 +75,10 @@ upgrade_php(){
             mkdir -p ${cur_dir}/software
         fi
 
-        if [[ "${php_version}" == "5.6" ]]; then
-            with_mysql="--enable-mysqlnd --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-mysql-sock=/tmp/mysql.sock --with-pdo-mysql=mysqlnd"
-            with_gd="--with-gd --with-vpx-dir --with-jpeg-dir --with-png-dir --with-xpm-dir --with-freetype-dir"
-        elif [[ "${php_version}" == "7.4" ]] || [[ "${php_version}" == "8.0" ]]; then
-            with_mysql="--enable-mysqlnd --with-mysqli=mysqlnd --with-mysql-sock=/tmp/mysql.sock --with-pdo-mysql=mysqlnd"
-            with_gd="--enable-gd --with-webp --with-jpeg --with-xpm --with-freetype"
-        else
-            with_mysql="--enable-mysqlnd --with-mysqli=mysqlnd --with-mysql-sock=/tmp/mysql.sock --with-pdo-mysql=mysqlnd"
-            with_gd="--with-gd --with-webp-dir --with-jpeg-dir --with-png-dir --with-xpm-dir --with-freetype-dir"
-        fi
-        if [[ "${php_version}" =~ ^7.[3-4]$ ]] || [[ "${php_version}" =~ ^8.0.+$ ]]; then
-            with_libmbfl=""
-        else
-            with_libmbfl="--with-libmbfl"
-        fi
-        if [[ "${php_version}" == "7.4" ]] || [[ "${php_version}" == "8.0" ]]; then
-            with_pcre="--with-pcre-jit"
-            with_libxml=""
-            with_icu=""
-            with_onig=""
-            enable_wddx=""
-            enable_zip="--with-zip"
-        else
-            with_pcre="--with-pcre-dir=${depends_prefix}/pcre"
-            with_libxml="--with-libxml-dir"
-            with_icu="--with-icu-dir=/usr"
-            with_onig="--with-onig"
-            enable_wddx="--enable-wddx"
-            enable_zip="--enable-zip"
-        fi
-        if [[ "${php_version}" =~ ^7.[2-4]$ ]] || [[ "${php_version}" =~ ^8.0.+$ ]]; then
-            other_options="--with-password-argon2 --enable-zend-test"
-            install_argon2
-        else
-            other_options="--with-mcrypt --enable-gd-native-ttf"
-        fi
-        if [[ "${php_version}" =~ ^8.0.+$ ]]; then
-            with_xmlrpc=""
-        else
-            with_xmlrpc="--with-xmlrpc"
-        fi
         [ ! -e "${depends_prefix}/libiconv/bin/iconv" ] && install_libiconv
         if ! grep -qE "^${depends_prefix}/libiconv/lib" /etc/ld.so.conf.d/*.conf; then
             echo "${depends_prefix}/libiconv/lib" > /etc/ld.so.conf.d/libiconvlib.conf
         fi
-        is_64bit && with_libdir="--with-libdir=lib64" || with_libdir=""
-        php_configure_args="
-        --prefix=${php_location} \
-        --with-apxs2=${apache_location}/bin/apxs \
-        --with-config-file-path=${php_location}/etc \
-        --with-config-file-scan-dir=${php_location}/php.d \
-        ${with_pcre} \
-        --with-imap \
-        --with-kerberos \
-        --with-imap-ssl \
-        ${with_libxml} \
-        --with-openssl \
-        --with-snmp \
-        ${with_libdir} \
-        ${with_mysql} \
-        ${with_gd} \
-        --with-zlib \
-        --with-bz2 \
-        --with-curl=/usr \
-        --with-gettext \
-        --with-gmp \
-        --with-mhash \
-        ${with_icu} \
-        --with-ldap \
-        --with-ldap-sasl \
-        ${with_libmbfl} \
-        ${with_onig} \
-        --with-pspell=/usr \
-        --with-enchant=/usr \
-        --with-readline \
-        --with-tidy=/usr \
-        ${with_xmlrpc} \
-        --with-xsl \
-        ${other_options} \
-        --enable-bcmath \
-        --enable-calendar \
-        --enable-dba \
-        --enable-exif \
-        --enable-ftp \
-        --enable-gd-jis-conv \
-        --enable-intl \
-        --enable-mbstring \
-        --enable-pcntl \
-        --enable-shmop \
-        --enable-soap \
-        --enable-sockets \
-        ${enable_wddx} \
-        ${enable_zip} \
-        ${disable_fileinfo}"
 
         cd ${cur_dir}/software
         if [ -s "php-${latest_php}.tar.gz" ]; then
@@ -175,8 +91,25 @@ upgrade_php(){
             untar ${latest_php_link} ${backup_php_link}
         fi
 
+        # Fixed a libenchant-2 error in PHP 7.4 for Debian or Ubuntu
+        if [ "${php_version}" == "7.4" ] && dpkg -l 2>/dev/null | grep -q "libenchant-2-dev"; then
+            patch -p1 < ${cur_dir}/src/remove-deprecated-call-and-deprecate-function.patch
+            patch -p1 < ${cur_dir}/src/use-libenchant-2-when-available.patch
+            ./buildconf -f
+        fi
+        # Fixed PHP extension snmp build without DES
+        if [ "${php_version}" == "7.4" ]; then
+            patch -p1 < ${cur_dir}/src/php-7.4-snmp.patch
+        fi
+        # Fixed build with OpenSSL 3.0 with disabling useless RSA_SSLV23_PADDING
+        if [ "${php_version}" == "7.4" ] && version_ge ${major_version} 3.0.0; then
+            patch -p1 < ${cur_dir}/src/minimal_fix_for_openssl_3.0_php7.4.patch
+        fi
+        if [ "${php_version}" == "8.0" ] && version_ge ${major_version} 3.0.0; then
+            patch -p1 < ${cur_dir}/src/minimal_fix_for_openssl_3.0_php8.0.patch
+        fi
         ldconfig
-        error_detect "./configure ${php_configure_args}"
+        error_detect "./configure ${configure_options}"
         error_detect "parallel_make"
         error_detect "make install"
 

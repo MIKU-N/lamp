@@ -1,4 +1,4 @@
-# Copyright (C) 2013 - 2021 Teddysun <i@teddysun.com>
+# Copyright (C) 2013 - 2022 Teddysun <i@teddysun.com>
 # 
 # This file is part of the LAMP script.
 #
@@ -18,8 +18,13 @@ mysql_preinstall_settings(){
         mysql_arr=(${mysql_arr[@]#${mariadb10_3_filename}})
         mysql_arr=(${mysql_arr[@]#${mariadb10_4_filename}})
         mysql_arr=(${mysql_arr[@]#${mariadb10_5_filename}})
+        mysql_arr=(${mysql_arr[@]#${mariadb10_6_filename}})
+        mysql_arr=(${mysql_arr[@]#${mariadb10_7_filename}})
     fi
-    display_menu mysql 2
+    # mariadb 10.6, 10.7 not support 32 bit
+    is_64bit || mysql_arr=(${mysql_arr[@]#${mariadb10_6_filename}})
+    is_64bit || mysql_arr=(${mysql_arr[@]#${mariadb10_7_filename}})
+    display_menu mysql 1
 
     if [ "${mysql}" != "do_not_install" ];then
         if echo "${mysql}" | grep -qi "mysql"; then
@@ -77,18 +82,24 @@ common_install(){
         for depend in ${yum_list[@]}; do
             error_detect_depends "yum -y install ${depend}"
         done
-        if centosversion 6; then
-            rpm -q perl-Data-Dumper > /dev/null 2>&1
-            if [ $? -ne 0 ]; then
-                _info "Installing package perl-Data-Dumper"
-                rpm -Uvh ${perl_data_dumper_url} > /dev/null 2>&1
-                [ $? -ne 0 ] && _error "Install package perl-Data-Dumper failed"
-            fi
-        else
-            error_detect_depends "yum -y install perl-Data-Dumper"
-        fi
         if centosversion 8 || echo ${opsy} | grep -Eqi "fedora" || echo ${opsy} | grep -Eqi "amazon"; then
             error_detect_depends "yum -y install ncurses-compat-libs"
+        fi
+        # Fixed libncurses.so.5: cannot open shared object file: No such file or directory
+        if is_64bit; then
+            if [ ! -e "/usr/lib64/libncurses.so.5" ] && [ -e "/usr/lib64/libncurses.so.6" ]; then
+                ln -sf /usr/lib64/libncurses.so.6 /usr/lib64/libncurses.so.5
+            fi
+            if [ ! -e "/usr/lib64/libtinfo.so.5" ] && [ -e "/usr/lib64/libtinfo.so.6" ]; then
+                ln -sf /usr/lib64/libtinfo.so.6 /usr/lib64/libtinfo.so.5
+            fi
+        else
+            if [ ! -e "/usr/lib/libncurses.so.5" ] && [ -e "/usr/lib/libncurses.so.6" ]; then
+                ln -sf /usr/lib/libncurses.so.6 /usr/lib/libncurses.so.5
+            fi
+            if [ ! -e "/usr/lib/libtinfo.so.5" ] && [ -e "/usr/lib/libtinfo.so.6" ]; then
+                ln -sf /usr/lib/libtinfo.so.6 /usr/lib/libtinfo.so.5
+            fi
         fi
     fi
     _info "Install dependencies for Database completed..."
@@ -247,15 +258,17 @@ common_setup(){
 
     _info "Starting ${db_name}..."
     /etc/init.d/mysqld start > /dev/null 2>&1
-    if [ "${mysql}" == "${mysql8_0_filename}" ]; then
-        /usr/bin/mysql -uroot -hlocalhost -e "create user root@'127.0.0.1' identified by \"${db_pass}\";"
-        /usr/bin/mysql -uroot -hlocalhost -e "grant all privileges on *.* to root@'127.0.0.1' with grant option;"
-        /usr/bin/mysql -uroot -hlocalhost -e "grant all privileges on *.* to root@'localhost' with grant option;"
-        /usr/bin/mysql -uroot -hlocalhost -e "alter user root@'localhost' identified by \"${db_pass}\";"
-    else
-        /usr/bin/mysql -e "grant all privileges on *.* to root@'127.0.0.1' identified by \"${db_pass}\" with grant option;"
-        /usr/bin/mysql -e "grant all privileges on *.* to root@'localhost' identified by \"${db_pass}\" with grant option;"
-        /usr/bin/mysql -uroot -p${db_pass} <<EOF
+    sleep 1
+    if [ $? -eq 0 ]; then
+        if [ "${mysql}" == "${mysql8_0_filename}" ]; then
+            /usr/bin/mysql -uroot -hlocalhost -e "create user root@'127.0.0.1' identified by \"${db_pass}\";"
+            /usr/bin/mysql -uroot -hlocalhost -e "grant all privileges on *.* to root@'127.0.0.1' with grant option;"
+            /usr/bin/mysql -uroot -hlocalhost -e "grant all privileges on *.* to root@'localhost' with grant option;"
+            /usr/bin/mysql -uroot -hlocalhost -e "alter user root@'localhost' identified by \"${db_pass}\";"
+        else
+            /usr/bin/mysql -e "grant all privileges on *.* to root@'127.0.0.1' identified by \"${db_pass}\" with grant option;"
+            /usr/bin/mysql -e "grant all privileges on *.* to root@'localhost' identified by \"${db_pass}\" with grant option;"
+            /usr/bin/mysql -uroot -p${db_pass} 2>/dev/null <<EOF
 drop database if exists test;
 delete from mysql.db where user='';
 delete from mysql.user where user='';
@@ -263,6 +276,9 @@ delete from mysql.user where user='mysql';
 flush privileges;
 exit
 EOF
+        fi
+    else
+        _warn "${mysql} looks like not running, please manually grant privileges for root user if necessary."
     fi
 
     _info "Shutting down ${db_name}..."
@@ -316,11 +332,7 @@ config_mysql(){
     if [ "${version}" == "8.0" ]; then
         echo "default_authentication_plugin  = mysql_native_password" >> /etc/my.cnf
     fi
-    if [ "${version}" == "5.5" ] || [ "${version}" == "5.6" ]; then
-        ${mysql_location}/scripts/mysql_install_db --basedir=${mysql_location} --datadir=${mysql_data_location} --user=mysql
-    elif [ "${version}" == "5.7" ] || [ "${version}" == "8.0" ]; then
-        ${mysql_location}/bin/mysqld --initialize-insecure --basedir=${mysql_location} --datadir=${mysql_data_location} --user=mysql
-    fi
+    ${mysql_location}/bin/mysqld --initialize-insecure --basedir=${mysql_location} --datadir=${mysql_data_location} --user=mysql
 
     common_setup
 
@@ -331,10 +343,15 @@ install_mariadb(){
 
     common_install
 
-    if [ "${mysql}" == "${mariadb10_5_filename}" ] || version_lt $(get_libc_version) 2.14; then
+    if version_lt $(get_libc_version) 2.14; then
         glibc_flag=linux
     else
         glibc_flag=linux-glibc_214
+        if [[ "${mysql}" == "${mariadb10_5_filename}" || \
+              "${mysql}" == "${mariadb10_6_filename}" || \
+              "${mysql}" == "${mariadb10_7_filename}" ]]; then
+            glibc_flag=linux-systemd
+        fi
     fi
 
     is_64bit && sys_bit_a=x86_64 || sys_bit_a=x86

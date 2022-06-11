@@ -1,4 +1,4 @@
-# Copyright (C) 2013 - 2021 Teddysun <i@teddysun.com>
+# Copyright (C) 2013 - 2022 Teddysun <i@teddysun.com>
 # 
 # This file is part of the LAMP script.
 #
@@ -54,9 +54,7 @@ generate_password(){
 }
 
 get_ip(){
-    local ipv4=$( ip addr | egrep -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | \
-    egrep -v "^192\.168|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-2]\.|^10\.|^127\.|^255\.|^0\." | head -n 1 )
-    [ -z "${ipv4}" ] && ipv4=$( wget -qO- -t1 -T2 ipv4.icanhazip.com )
+    ipv4=$( wget -qO- -t1 -T2 ipv4.icanhazip.com )
     [ -z "${ipv4}" ] && ipv4=$( wget -qO- -t1 -T2 ipinfo.io/ip )
     printf -- "%s" "${ipv4}"
 }
@@ -132,7 +130,7 @@ set_hint(){
 }
 
 disable_selinux(){
-    if [ -s /etc/selinux/config ] && grep 'SELINUX=enforcing' /etc/selinux/config; then
+    if [ -s /etc/selinux/config ] && grep -q 'SELINUX=enforcing' /etc/selinux/config; then
         sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
         setenforce 0
     fi
@@ -296,10 +294,11 @@ check_installed(){
 }
 
 check_os(){
+    get_os_info
     is_support_flg=0
     if check_sys packageManager yum || check_sys packageManager apt; then
-        # Not support CentOS prior to 6 & Debian prior to 8 & Ubuntu prior to 14 versions
-        if [ -n "$(get_centosversion)" ] && [ $(get_centosversion) -lt 6 ]; then
+        # Not support CentOS prior to 7 & Debian prior to 9 & Ubuntu prior to 18 versions
+        if [ -n "$(get_centosversion)" ] && [ $(get_centosversion) -lt 7 ]; then
             is_support_flg=1
         fi
         if [ -n "$(get_aclversion)" ] && [ $(get_aclversion) -lt 2 ]; then
@@ -307,22 +306,21 @@ check_os(){
             else
             is_support_flg=0
         fi
-        if [ -n "$(get_debianversion)" ] && [ $(get_debianversion) -lt 8 ]; then
+        if [ -n "$(get_debianversion)" ] && [ $(get_debianversion) -lt 9 ]; then
             is_support_flg=1
         fi
-        if [ -n "$(get_ubuntuversion)" ] && [ $(get_ubuntuversion) -lt 14 ]; then
+        if [ -n "$(get_ubuntuversion)" ] && [ $(get_ubuntuversion) -lt 18 ]; then
             is_support_flg=1
         fi
     else
         is_support_flg=1
     fi
     if [ ${is_support_flg} -eq 1 ]; then
-        _error "Not supported OS, please change OS to CentOS 6+ or Debian 8+ or Ubuntu 14+ or Alibaba Cloud Linux 3 and try again."
+        _error "Not supported OS, please change OS to CentOS 7+ or Debian 9+ or Ubuntu 18+ or Alibaba Cloud Linux 3 and try again."
     fi
 }
 
 check_ram(){
-    get_os_info
     if [ ${ramsum} -lt 480 ]; then
         _error "Not enough memory. The LAMP installation needs memory: ${tram}MB*RAM + ${swap}MB*SWAP >= 480MB"
     fi
@@ -409,7 +407,7 @@ error_detect_depends(){
     local work_dir=$(pwd)
     local depend=$(echo "$1" | awk '{print $4}')
     _info "Installing package ${depend}"
-    ${command} > /dev/null 2>&1
+    ${command} &> /dev/null
     if [ $? -ne 0 ]; then
         distro=$(get_opsy)
         version=$(cat /proc/version)
@@ -693,13 +691,13 @@ download_file(){
         _info "$1 [found]"
     else
         _info "$1 not found, download now..."
-        wget --no-check-certificate -cv -t3 -T60 -O ${1} ${2}
+        wget --no-check-certificate -cv -t3 -T10 -O ${1} ${2}
         if [ $? -eq 0 ]; then
             _info "$1 download completed..."
         else
             rm -f "$1"
             _info "$1 download failed, retrying download from secondary url..."
-            wget --no-check-certificate -cv -t3 -T60 -O "$1" "${download_root_url}${1}"
+            wget --no-check-certificate -cv -t3 -T60 -O "$1" "${download_root_url}/${1}"
             if [ $? -eq 0 ]; then
                 _info "$1 download completed..."
             else
@@ -728,12 +726,12 @@ is_digit(){
 
 is_exist(){
     local cmd="$1"
-    if eval type type > /dev/null 2>&1; then
-        eval type "$cmd" > /dev/null 2>&1
-    elif command > /dev/null 2>&1; then
-        command -v "$cmd" > /dev/null 2>&1
+    if eval type type &> /dev/null; then
+        eval type "$cmd" &> /dev/null
+    elif command &> /dev/null; then
+        command -v "$cmd" &> /dev/null
     else
-        which "$cmd" > /dev/null 2>&1
+        which "$cmd" &> /dev/null
     fi
     local rt=$?
     return ${rt}
@@ -761,34 +759,13 @@ add_to_env(){
 
 firewall_set(){
     _info "Setting Firewall..."
-    if centosversion 6; then
-        if [ -e /etc/init.d/iptables ]; then
-            if /etc/init.d/iptables status > /dev/null 2>&1; then
-                iptables -L -n | grep -qi 80
-                if [ $? -ne 0 ]; then
-                    iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
-                fi
-                iptables -L -n | grep -qi 443
-                if [ $? -ne 0 ]; then
-                    iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 443 -j ACCEPT
-                fi
-                /etc/init.d/iptables save > /dev/null 2>&1
-                /etc/init.d/iptables restart > /dev/null 2>&1
-            else
-                _warn "iptables looks like not running, please manually set if necessary."
-            fi
-        else
-            _warn "iptables looks like not installed."
-        fi
+    if systemctl status firewalld &> /dev/null; then
+        default_zone="$(firewall-cmd --get-default-zone)"
+        firewall-cmd --permanent --zone=${default_zone} --add-service=http &> /dev/null
+        firewall-cmd --permanent --zone=${default_zone} --add-service=https &> /dev/null
+        firewall-cmd --reload &> /dev/null
     else
-        if systemctl status firewalld > /dev/null 2>&1; then
-            default_zone="$(firewall-cmd --get-default-zone)"
-            firewall-cmd --permanent --zone=${default_zone} --add-service=http > /dev/null 2>&1
-            firewall-cmd --permanent --zone=${default_zone} --add-service=https > /dev/null 2>&1
-            firewall-cmd --reload > /dev/null 2>&1
-        else
-            _warn "firewalld looks like not running, please manually set if necessary."
-        fi
+        _warn "firewalld looks like not running, please manually set if necessary."
     fi
     _info "Set Firewall completed..."
 }
@@ -797,8 +774,8 @@ remove_packages(){
     _info "Removing the conflict packages..."
     if check_sys packageManager apt; then
         [ "${apache}" != "do_not_install" ] && apt-get -y remove --purge apache2 apache2-* &> /dev/null
-        [ "${mysql}" != "do_not_install" ] && apt-get -y remove --purge mysql-client mysql-server mysql-common libmysqlclient18 &> /dev/null
-        [ "${php}" != "do_not_install" ] && apt-get -y remove --purge php5 php5-* php7.0 php7.0-* php7.1 php7.1-* php7.2 php7.2-* php7.3 php7.3-* php7.4 php7.4-* &> /dev/null
+        [ "${mysql}" != "do_not_install" ] && apt-get -y remove --purge mysql-client mysql-server mysql-common libmysqlclient20 libmysqlclient21 &> /dev/null
+        [ "${php}" != "do_not_install" ] && apt-get -y remove --purge php7.4 php7.4-* php8.0 php8.0-* php8.1 php8.1-* &> /dev/null
     elif check_sys packageManager yum; then
         [ "${apache}" != "do_not_install" ] && yum -y remove httpd-* &> /dev/null
         [ "${mysql}" != "do_not_install" ] && yum -y remove mysql-* &> /dev/null
@@ -809,9 +786,8 @@ remove_packages(){
 
 sync_time(){
     _info "Sync time..."
-    is_exist "ntpdate" && ntpdate -bv cn.pool.ntp.org
-    rm -f /etc/localtime
-    ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+    is_exist "ntpdate" && ntpdate -b cn.pool.ntp.org &> /dev/null
+    is_exist "chronyd" && chronyd -q 'server cn.pool.ntp.org iburst' &> /dev/null
     _info "Sync time completed..."
     StartDate=$(date "+%Y-%m-%d %H:%M:%S")
     StartDateSecond=$(date +%s)
@@ -983,23 +959,23 @@ EOF
     fi
     if [ "${apache}" != "do_not_install" ]; then
         echo "Starting Apache..."
-        /etc/init.d/httpd start > /dev/null 2>&1
+        /etc/init.d/httpd start &> /dev/null
     fi
     if [ "${mysql}" != "do_not_install" ]; then
         echo "Starting Database..."
-        /etc/init.d/mysqld start > /dev/null 2>&1
+        /etc/init.d/mysqld start &> /dev/null
     fi
-    if if_in_array "${php_memcached_filename}" "${php_modules_install}" || if_in_array "${php_memcached_filename2}" "${php_modules_install}"; then
+    if if_in_array "${php_memcached_filename}" "${php_modules_install}"; then
         echo "Starting Memcached..."
-        /etc/init.d/memcached start > /dev/null 2>&1
+        /etc/init.d/memcached start &> /dev/null
     fi
-    if if_in_array "${php_redis_filename}" "${php_modules_install}" || if_in_array "${php_redis_filename2}" "${php_modules_install}"; then
+    if if_in_array "${php_redis_filename}" "${php_modules_install}"; then
         echo "Starting Redis-server..."
-        /etc/init.d/redis-server start > /dev/null 2>&1
+        /etc/init.d/redis-server start &> /dev/null
     fi
     # Install phpmyadmin database
     if [ -d "${web_root_dir}/phpmyadmin" ] && [ -f "/usr/bin/mysql" ]; then
-        /usr/bin/mysql -uroot -p${dbrootpwd} < ${web_root_dir}/phpmyadmin/sql/create_tables.sql > /dev/null 2>&1
+        /usr/bin/mysql -uroot -p${dbrootpwd} < ${web_root_dir}/phpmyadmin/sql/create_tables.sql &> /dev/null
     fi
 
     sleep 1
@@ -1016,24 +992,32 @@ EOF
 install_tools(){
     _info "Installing development tools..."
     if check_sys packageManager apt; then
-        apt-get -y update > /dev/null 2>&1
-        apt_tools=(tar gcc g++ cmake make wget perl curl bzip2 libreadline-dev net-tools python python-dev cron ca-certificates ntpdate)
+        apt-get -y update &> /dev/null
+        apt_tools=(xz-utils tar gcc g++ make wget perl curl bzip2 libreadline-dev net-tools cron ca-certificates ntpdate)
         for tool in ${apt_tools[@]}; do
             error_detect_depends "apt-get -y install ${tool}"
         done
+        if ubuntuversion 22; then
+            error_detect_depends "apt-get -y install python3"
+            error_detect_depends "apt-get -y install python3-dev"
+        else
+            error_detect_depends "apt-get -y install python"
+            error_detect_depends "apt-get -y install python-dev"
+        fi
     elif check_sys packageManager yum; then
-        yum makecache > /dev/null 2>&1
-        yum_tools=(yum-utils tar gcc gcc-c++ make cmake wget perl curl bzip2 readline readline-devel net-tools crontabs ca-certificates)
+        yum makecache &> /dev/null
+        yum_tools=(yum-utils tar gcc gcc-c++ make wget perl chkconfig curl bzip2 readline readline-devel net-tools crontabs ca-certificates epel-release)
+        # libcurl-minimal and curl-minimal will be installed by default instead of libcurl and curl
+        if rpm -qa | grep -q curl-minimal; then
+            yum_tools=(${yum_tools[@]#curl})
+        fi
         for tool in ${yum_tools[@]}; do
             error_detect_depends "yum -y install ${tool}"
         done
-        if centosversion 6 || centosversion 7 || centosversion 8 || aclversion 3; then
-            error_detect_depends "yum -y install epel-release"
-            yum-config-manager --enable epel > /dev/null 2>&1
-        fi
+        yum-config-manager --enable epel &> /dev/null
         # Install epel-release in Amazon Linux 2
         if is_exist "amazon-linux-extras"; then
-            amazon-linux-extras install -y epel > /dev/null 2>&1
+            amazon-linux-extras install -y epel &> /dev/null
         fi
         #Add EPEL Base URL when system is ACL3
         if aclversion 3; then
@@ -1043,12 +1027,16 @@ install_tools(){
         if centosversion 8 || aclversion 3; then
             error_detect_depends "yum -y install python3-devel"
             error_detect_depends "yum -y install chrony"
-            yum-config-manager --enable PowerTools > /dev/null 2>&1 || yum-config-manager --enable powertools > /dev/null 2>&1
-       else
-           error_detect_depends "yum -y install python"
-           error_detect_depends "yum -y install python-devel"
-          error_detect_depends "yum -y install ntpdate"
-       fi
+            yum-config-manager --enable PowerTools &> /dev/null || yum-config-manager --enable powertools &> /dev/null
+        elif centosversion 9; then
+            error_detect_depends "yum -y install python3-devel"
+            error_detect_depends "yum -y install chrony"
+            yum-config-manager --enable crb &> /dev/null
+        else
+            error_detect_depends "yum -y install python"
+            error_detect_depends "yum -y install python-devel"
+            error_detect_depends "yum -y install ntpdate"
+        fi
     fi
     _info "Install development tools completed..."
 

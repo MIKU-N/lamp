@@ -1,4 +1,4 @@
-# Copyright (C) 2013 - 2021 Teddysun <i@teddysun.com>
+# Copyright (C) 2013 - 2022 Teddysun <i@teddysun.com>
 # 
 # This file is part of the LAMP script.
 #
@@ -208,11 +208,7 @@ mod_xml2enc.so
     sed -i 's/Require host .example.com/Require host localhost/g' ${apache_location}/conf/extra/httpd-info.conf
     cp -f ${cur_dir}/conf/httpd-ssl.conf ${apache_location}/conf/extra/httpd-ssl.conf
     rm -f /etc/init.d/httpd
-    if centosversion 6; then
-        cp -f ${cur_dir}/init.d/httpd-init-centos6 /etc/init.d/httpd
-    else
-        cp -f ${cur_dir}/init.d/httpd-init /etc/init.d/httpd
-    fi
+    cp -f ${cur_dir}/init.d/httpd-init /etc/init.d/httpd
     sed -i "s#^apache_location=.*#apache_location=${apache_location}#" /etc/init.d/httpd
     chmod +x /etc/init.d/httpd
     rm -fr /var/log/httpd /usr/sbin/httpd
@@ -299,6 +295,11 @@ install_mod_wsgi(){
     cd ${mod_wsgi_filename}
 
     [ -e "/usr/libexec/platform-python" ] && mod_wsgi_configure="--with-python=/usr/libexec/platform-python" || mod_wsgi_configure=""
+    if [ ! -e "/usr/bin/python" ] && [ -e "/usr/bin/python3" ]; then
+        mod_wsgi_configure="--with-python=/usr/bin/python3"
+    else
+        mod_wsgi_configure=""
+    fi
     error_detect "./configure --with-apxs=${apache_location}/bin/apxs ${mod_wsgi_configure}"
     error_detect "make"
     error_detect "make install"
