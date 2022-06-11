@@ -1,4 +1,4 @@
-# Copyright (C) 2013 - 2021 Teddysun <i@teddysun.com>
+# Copyright (C) 2013 - 2022 Teddysun <i@teddysun.com>
 # 
 # This file is part of the LAMP script.
 #
@@ -28,13 +28,15 @@ upgrade_db(){
         installed_mysql="$(${mysql_location}/bin/mysql -V | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
         mysql_ver="$(echo ${installed_mysql} | cut -d. -f1-2)"
         if   [ "${mysql_ver}" == "5.5" ]; then
-            latest_mysql="$(curl -4s https://dev.mysql.com/downloads/mysql/5.5.html | awk '/MySQL Community Server/{print $4}' | grep '5.5')"
+            latest_mysql="5.5.62"
         elif [ "${mysql_ver}" == "5.6" ]; then
-            latest_mysql="$(curl -4s https://dev.mysql.com/downloads/mysql/5.6.html | awk '/MySQL Community Server/{print $4}' | grep '5.6')"
+            latest_mysql="5.6.51"
         elif [ "${mysql_ver}" == "5.7" ]; then
             latest_mysql="$(curl -4s https://dev.mysql.com/downloads/mysql/5.7.html | awk '/MySQL Community Server/{print $4}' | grep '5.7')"
         elif [ "${mysql_ver}" == "8.0" ]; then
             latest_mysql="$(curl -4s https://dev.mysql.com/downloads/mysql/8.0.html | awk '/MySQL Community Server/{print $4}' | grep '8.0')"
+        else
+            _error "There is no update available for ${db_name} ${installed_mysql}"
         fi
 
         _info "Latest version of MySQL   : $(_red ${latest_mysql})"
@@ -51,15 +53,21 @@ upgrade_db(){
         elif [ "${mariadb_ver}" == "10.0" ]; then
             latest_mariadb="10.0.38"
         elif [ "${mariadb_ver}" == "10.1" ]; then
-            latest_mariadb="$(curl -4s https://downloads.mariadb.org/ | awk -F/ '/\/mariadb\/10.1/{print $3}')"
+            latest_mariadb="10.1.48"
         elif [ "${mariadb_ver}" == "10.2" ]; then
-            latest_mariadb="$(curl -4s https://downloads.mariadb.org/ | awk -F/ '/\/mariadb\/10.2/{print $3}')"
+            latest_mariadb="$(curl -4s https://mariadb.org/download/ | grep "Latest releases" | grep -oE  "10.2.[0-9.]+" | head -1)"
         elif [ "${mariadb_ver}" == "10.3" ]; then
-            latest_mariadb="$(curl -4s https://downloads.mariadb.org/ | awk -F/ '/\/mariadb\/10.3/{print $3}')"
+            latest_mariadb="$(curl -4s https://mariadb.org/download/ | grep "Latest releases" | grep -oE  "10.3.[0-9.]+" | head -1)"
         elif [ "${mariadb_ver}" == "10.4" ]; then
-            latest_mariadb="$(curl -4s https://downloads.mariadb.org/ | awk -F/ '/\/mariadb\/10.4/{print $3}')"
+            latest_mariadb="$(curl -4s https://mariadb.org/download/ | grep "Latest releases" | grep -oE  "10.4.[0-9.]+" | head -1)"
         elif [ "${mariadb_ver}" == "10.5" ]; then
-            latest_mariadb="$(curl -4s https://downloads.mariadb.org/ | awk -F/ '/\/mariadb\/10.5/{print $3}')"
+            latest_mariadb="$(curl -4s https://mariadb.org/download/ | grep "Latest releases" | grep -oE  "10.5.[0-9.]+" | head -1)"
+        elif [ "${mariadb_ver}" == "10.6" ]; then
+            latest_mariadb="$(curl -4s https://mariadb.org/download/ | grep "Latest releases" | grep -oE  "10.6.[0-9.]+" | head -1)"
+        elif [ "${mariadb_ver}" == "10.7" ]; then
+            latest_mariadb="$(curl -4s https://mariadb.org/download/ | grep "Latest releases" | grep -oE  "10.7.[0-9.]+" | head -1)"
+        else
+            _error "There is no update available for ${db_name} ${installed_mariadb}"
         fi
 
         _info "Latest version of MariaDB   : $(_red ${latest_mariadb})"
@@ -88,7 +96,7 @@ upgrade_db(){
         fi
 
         _info "Starting backup all of databases, Please wait a moment..."
-        /usr/bin/mysqldump -uroot -p${mysql_root_password} --all-databases > ${mysql_dump}
+        /usr/bin/mysqldump -uroot -p${mysql_root_password} --all-databases 2>/dev/null > ${mysql_dump}
         if [ $? -eq 0 ]; then
             _info "${db_name} all of databases backup success"
         else
@@ -157,10 +165,13 @@ upgrade_db(){
             mkdir -p ${mariadb_location}
             [ ! -d ${datalocation} ] && mkdir -p ${datalocation}
 
-            if [ "${mariadb_ver}" == "10.5" ] || version_lt $(get_libc_version) 2.14; then
+            if version_lt $(get_libc_version) 2.14; then
                 glibc_flag=linux
             else
                 glibc_flag=linux-glibc_214
+                if [[ "${mariadb_ver}" == "10.5" || "${mariadb_ver}" == "10.6" || "${mariadb_ver}" == "10.7" ]]; then
+                    glibc_flag=linux-systemd
+                fi
             fi
             is_64bit && sys_bit_a=x86_64 || sys_bit_a=x86
             is_64bit && sys_bit_b=x86_64 || sys_bit_b=i686
@@ -195,6 +206,7 @@ upgrade_db(){
         fi
         _info "Starting ${db_name}..."
         /etc/init.d/mysqld start > /dev/null 2>&1
+        sleep 1
         if [ $? -ne 0 ]; then
             _error "Starting ${db_name} failed, Please check it and try again"
         fi
@@ -206,7 +218,7 @@ upgrade_db(){
         else
             /usr/bin/mysql -e "grant all privileges on *.* to root@'127.0.0.1' identified by \"${mysql_root_password}\" with grant option;"
             /usr/bin/mysql -e "grant all privileges on *.* to root@'localhost' identified by \"${mysql_root_password}\" with grant option;"
-            /usr/bin/mysql -uroot -p${mysql_root_password} <<EOF
+            /usr/bin/mysql -uroot -p${mysql_root_password} 2>/dev/null <<EOF
 drop database if exists test;
 delete from mysql.db where user='';
 delete from mysql.user where user='';
