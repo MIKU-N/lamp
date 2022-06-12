@@ -9,7 +9,7 @@
 - 所以我改了一下原作者的系统识别逻辑，现在对于Alibaba Cloud Linux 3完全适配。
 - 已在Alibaba cloud Linux 3镜像内实验通过，完全可以正常无人值守化编译安装。
 ## 其他定制化系统支持
-- TencentOS Server 3 Ver3.2104 √  
+- TencentOS Server 3 Ver3.2104 √ Add GPG Verified 
 我在TencentOS Server 3上测试时发现他们压根没有修改redhat-release信息，脚本识别到的就是Centos8.2，所以无需对脚本进行修改默认就能兼容。
 
 
