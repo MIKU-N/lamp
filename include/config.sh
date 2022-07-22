@@ -34,11 +34,11 @@ parallel_compile=1
 
 ##Software version
 #nghttp2
-nghttp2_filename="nghttp2-1.47.0"
-nghttp2_filename_url="https://github.com/nghttp2/nghttp2/releases/download/v1.47.0/nghttp2-1.47.0.tar.gz"
+nghttp2_filename="nghttp2-1.48.0"
+nghttp2_filename_url="https://github.com/nghttp2/nghttp2/releases/download/v1.48.0/nghttp2-1.48.0.tar.gz"
 #openssl
-openssl_filename="openssl-1.1.1o"
-openssl_filename_url="https://www.openssl.org/source/openssl-1.1.1o.tar.gz"
+openssl_filename="openssl-1.1.1q"
+openssl_filename_url="https://www.openssl.org/source/openssl-1.1.1q.tar.gz"
 #apache2.4
 apache2_4_filename="httpd-2.4.54"
 apache2_4_filename_url="https://dlcdn.apache.org//httpd/httpd-2.4.54.tar.gz"
@@ -62,11 +62,11 @@ mariadb10_7_filename="mariadb-10.7.4"
 php7_4_filename="php-7.4.30"
 php7_4_filename_url="https://www.php.net/distributions/php-7.4.30.tar.gz"
 #php8.0
-php8_0_filename="php-8.0.20"
-php8_0_filename_url="https://www.php.net/distributions/php-8.0.20.tar.gz"
+php8_0_filename="php-8.0.21"
+php8_0_filename_url="https://www.php.net/distributions/php-8.0.21.tar.gz"
 #php8.1
-php8_1_filename="php-8.1.7"
-php8_1_filename_url="https://www.php.net/distributions/php-8.1.7.tar.gz"
+php8_1_filename="php-8.1.8"
+php8_1_filename_url="https://www.php.net/distributions/php-8.1.8.tar.gz"
 #phpMyAdmin
 phpmyadmin_filename="phpMyAdmin-5.2.0-all-languages"
 phpmyadmin_filename_url="https://files.phpmyadmin.net/phpMyAdmin/5.2.0/phpMyAdmin-5.2.0-all-languages.tar.gz"
@@ -88,8 +88,8 @@ apr_filename_url="http://ftp.jaist.ac.jp/pub/apache//apr/apr-1.7.0.tar.gz"
 apr_util_filename="apr-util-1.6.1"
 apr_util_filename_url="http://ftp.jaist.ac.jp/pub/apache//apr/apr-util-1.6.1.tar.gz"
 #mod_wsgi
-mod_wsgi_filename="mod_wsgi-4.9.2"
-mod_wsgi_filename_url="https://github.com/GrahamDumpleton/mod_wsgi/archive/refs/tags/4.9.2.tar.gz"
+mod_wsgi_filename="mod_wsgi-4.9.3"
+mod_wsgi_filename_url="https://github.com/GrahamDumpleton/mod_wsgi/archive/refs/tags/4.9.3.tar.gz"
 #mod_jk
 mod_jk_filename="tomcat-connectors-1.2.48-src"
 mod_jk_filename_url="http://ftp.jaist.ac.jp/pub/apache/tomcat/tomcat-connectors/jk/tomcat-connectors-1.2.48-src.tar.gz"
@@ -119,8 +119,8 @@ cmake_filename_url="https://github.com/Kitware/CMake/releases/download/v3.20.4/c
 cmake_filename2="cmake-3.20.4-Linux-x86_64"
 cmake_filename_url2="https://github.com/Kitware/CMake/releases/download/v3.20.4/cmake-3.20.4-linux-x86_64.tar.gz"
 #libzip
-libzip_filename="libzip-1.8.0"
-libzip_filename_url="https://libzip.org/download/libzip-1.8.0.tar.gz"
+libzip_filename="libzip-1.9.2"
+libzip_filename_url="https://libzip.org/download/libzip-1.9.2.tar.gz"
 #libiconv
 libiconv_filename="libiconv-1.16"
 libiconv_filename_url="https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.16.tar.gz"
@@ -144,14 +144,14 @@ pdflib64_filename="PDFlib-10.0.0p1-Linux-x64-php"
 pdflib64_filename_url="https://www.pdflib.com/binaries/PDFlib/1000/PDFlib-10.0.0p1-Linux-x64-php.tar.gz"
 #PECL packages
 #php extension swoole
-swoole_filename="swoole-4.8.9"
-swoole_filename_url="https://pecl.php.net/get/swoole-4.8.9.tgz"
+swoole_filename="swoole-4.8.11"
+swoole_filename_url="https://pecl.php.net/get/swoole-4.8.11.tgz"
 #php extension xdebug
 xdebug_filename="xdebug-3.1.3"
 xdebug_filename_url="https://pecl.php.net/get/xdebug-3.1.3.tgz"
 #ImageMagick
-ImageMagick_filename="ImageMagick-7.1.0-35"
-ImageMagick_filename_url="https://download.imagemagick.org/ImageMagick/download/releases/ImageMagick-7.1.0-35.tar.gz"
+ImageMagick_filename="ImageMagick-7.1.0-43"
+ImageMagick_filename_url="https://imagemagick.org/archive/ImageMagick-7.1.0-43.tar.gz"
 #php extension imagick
 php_imagemagick_filename="imagick-3.7.0"
 php_imagemagick_filename_url="https://pecl.php.net/get/imagick-3.7.0.tgz"
@@ -171,8 +171,8 @@ redis_filename_url="http://download.redis.io/releases/redis-5.0.14.tar.gz"
 php_redis_filename="redis-5.3.7"
 php_redis_filename_url="https://pecl.php.net/get/redis-5.3.7.tgz"
 #php extension mongodb
-php_mongo_filename="mongodb-1.12.0"
-php_mongo_filename_url="https://pecl.php.net/get/mongodb-1.12.0.tgz"
+php_mongo_filename="mongodb-1.13.0"
+php_mongo_filename_url="https://pecl.php.net/get/mongodb-1.13.0.tgz"
 #libsodium
 libsodium_filename="libsodium-1.0.18"
 libsodium_filename_url="https://download.libsodium.org/libsodium/releases/libsodium-1.0.18.tar.gz"

@@ -43,6 +43,7 @@
 - CentOS Stream 8
 - CentOS Stream 9
 - Rocky Linux 8 (recommend)
+- Rocky Linux 9
 - Debian 9
 - Debian 10
 - Debian 11 (recommend)
@@ -66,9 +67,9 @@
 | httpd                         | 2.4.54                                                    |
 | apr                           | 1.7.0                                                     |
 | apr-util                      | 1.6.1                                                     |
-| nghttp2                       | 1.47.0                                                    |
-| openssl                       | 1.1.1o                                                    |
-| mod_wsgi                      | 4.9.2                                                     |
+| nghttp2                       | 1.48.0                                                    |
+| openssl                       | 1.1.1q                                                    |
+| mod_wsgi                      | 4.9.3                                                     |
 | mod_security2                 | 2.9.5                                                     |
 | mod_jk                        | 1.2.48                                                    |
 
@@ -79,12 +80,12 @@
 
 | PHP & Additional extensions   | Version                                                   |
 |-------------------------------|-----------------------------------------------------------|
-| PHP                           | 7.4.30, 8.0.20, 8.1.7                                     |
+| PHP                           | 7.4.30, 8.0.21, 8.1.8                                     |
 | ionCube Loader                | 11.0.1                                                    |
 | PDFlib                        | 10.0.0                                                    |
 | APCu extension                | 5.1.21                                                    |
 | gRPC extension                | 1.45.0                                                    |
-| ImageMagick                   | 7.1.0-35                                                  |
+| ImageMagick                   | 7.1.0-43                                                  |
 | imagick extension             | 3.7.0                                                     |
 | libsodium                     | 1.0.18                                                    |
 | libsodium extension           | 2.0.23                                                    |
@@ -94,8 +95,8 @@
 | re2c                          | 3.0                                                       |
 | redis                         | 5.0.14                                                    |
 | redis extension               | 5.3.7                                                     |
-| mongodb extension             | 1.12.0                                                    |
-| swoole extension              | 4.8.9                                                     |
+| mongodb extension             | 1.13.0                                                    |
+| swoole extension              | 4.8.11                                                    |
 | yaf extension                 | 3.3.5                                                     |
 | yar extension                 | 2.3.2                                                     |
 | msgpack extension             | 2.1.2                                                     |
